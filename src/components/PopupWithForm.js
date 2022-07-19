@@ -1,5 +1,3 @@
-// Не готов компонент, необходимо доделать
-
 function PopupWithForm(props) {
   return (
     <div className={`popup popup_type_${props.name}`}>
@@ -16,29 +14,7 @@ function PopupWithForm(props) {
             className={`popup__form popup__form_type_${props.name}`}
             novalidate
           >
-            <input
-              type="text"
-              name="popup__name"
-              required
-              className="popup__input popup__input_type_name"
-              id="name"
-              minlength="2"
-              maxlength="40"
-              placeholder="Имя"
-            />
-            <span className="popup__input-error name-error"></span>
-            <input
-              type="text"
-              name="popup__about-me"
-              required
-              className="popup__input popup__input_type_about-me"
-              id="about"
-              minlength="2"
-              maxlength="200"
-              placeholder="О себе"
-            />
-            <span className="popup__input-error about-error"></span>
-            <button className="popup__save-btn" type="submit">Сохранить</button>
+            {props.children}
           </form>
         </div>
     </div>

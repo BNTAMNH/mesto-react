@@ -1,3 +1,5 @@
+//Работа остановлена на пункте Декларативный подход
+
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
@@ -91,17 +93,7 @@ function App() {
     </div>
     </div>
 
-    <div className="popup popup_type_photo">
-    <figure className="popup__view">
-      <img src="#" alt="" className="popup__photo" />
-      <figcaption className="popup__caption"></figcaption>
-      <button
-        className="popup__close-btn"
-        type="button"
-        aria-label="Закрыть"
-      ></button>
-    </figure>
-    </div>
+    
 
     <div className="popup popup_type_confirm">
     <div className="popup__container">
