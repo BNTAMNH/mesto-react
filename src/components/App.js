@@ -1,31 +1,43 @@
-//Работа остановлена на пункте Декларативный подход
-
+import React from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
+import PopupWithForm from "./PopupWithForm";
 
 function App() {
+
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
+  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
+
+  function handleEditAvatarClick() {
+    setEditAvatarPopupOpen(true);
+  }
+
+  function handleEditProfileClick() {
+    setEditProfilePopupOpen(true);
+  }
+
+  function handleAddPlaceClick() {
+    setAddPlacePopupOpen(true);
+  }
+
   return (
     <>
       <div className="page">
         <Header />
-        <Main />
+        <Main 
+          onEditProfile = {handleEditProfileClick}
+          onAddPlace = {handleAddPlaceClick}
+          onEditAvatar = {handleEditAvatarClick}
+        />
         <Footer />
       </div>
 
-    <div className="popup popup_type_edit">
-      <div className="popup__container">
-        <button
-          className="popup__close-btn"
-          type="button"
-          aria-label="Закрыть"
-        ></button>
-        <h2 className="popup__title">Редактировать профиль</h2>
-        <form
-          action="submit"
-          name="popup-edit-profile"
-          className="popup__form popup__form_type_edit"
-          novalidate
+      <PopupWithForm
+        name = 'edit'
+        isOpen = {isEditProfilePopupOpen}
+        title = 'Редактировать профиль'
         >
           <input
             type="text"
@@ -50,25 +62,14 @@ function App() {
           />
           <span className="popup__input-error about-error"></span>
           <button className="popup__save-btn" type="submit">Сохранить</button>
-        </form>
-      </div>
-    </div>
+      </PopupWithForm>
 
-    <div className="popup popup_type_add">
-    <div className="popup__container">
-      <button
-        className="popup__close-btn"
-        type="button"
-        aria-label="Закрыть"
-      ></button>
-      <h2 className="popup__title">Новое место</h2>
-      <form
-        action="submit"
-        name="popup-add-card"
-        className="popup__form popup__form_type_add"
-        novalidate
-      >
-        <input
+      <PopupWithForm
+        name = 'add'
+        isOpen = {isAddPlacePopupOpen}
+        title = 'Новое место'
+        >
+         <input
           type="text"
           name="popup__title"
           required
@@ -89,10 +90,24 @@ function App() {
         />
         <span className="popup__input-error link-error"></span>
         <button className="popup__save-btn" type="submit">Сохранить</button>
-      </form>
-    </div>
-    </div>
+      </PopupWithForm>
 
+      <PopupWithForm
+        name = 'avatar-edit'
+        isOpen = {isEditAvatarPopupOpen}
+        title = 'Обновить аватар'
+        >
+         <input
+          name="popup__avatar-link"
+          required
+          className="popup__input"
+          id="avatar"
+          type="url"
+          placeholder="https://somewebsite.com/someimage.jpg"
+        />
+        <span className="popup__input-error avatar-error"></span>
+        <button className="popup__save-btn" type="submit">Сохранить</button>
+      </PopupWithForm>
     
 
     <div className="popup popup_type_confirm">
@@ -107,33 +122,6 @@ function App() {
     </div>
     </div>
 
-    <div className="popup popup_type_avatar-edit">
-    <div className="popup__container">
-      <button
-        className="popup__close-btn"
-        type="button"
-        aria-label="Закрыть"
-      ></button>
-      <h2 className="popup__title">Обновить аватар</h2>
-      <form
-        action="submit"
-        name="popup-avatar"
-        className="popup__form popup__form_type_avatar"
-        novalidate
-      >
-        <input
-          name="popup__avatar-link"
-          required
-          className="popup__input"
-          id="avatar"
-          type="url"
-          placeholder="https://somewebsite.com/someimage.jpg"
-        />
-        <span className="popup__input-error avatar-error"></span>
-        <button className="popup__save-btn" type="submit">Сохранить</button>
-      </form>
-    </div>
-    </div>
   </>
   );
 }
