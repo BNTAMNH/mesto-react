@@ -52,8 +52,8 @@ function App() {
             required
             className="popup__input popup__input_type_name"
             id="name"
-            minlength="2"
-            maxlength="40"
+            minLength="2"
+            maxLength="40"
             placeholder="Имя"
           />
           <span className="popup__input-error name-error"></span>
@@ -63,8 +63,8 @@ function App() {
             required
             className="popup__input popup__input_type_about-me"
             id="about"
-            minlength="2"
-            maxlength="200"
+            minLength="2"
+            maxLength="200"
             placeholder="О себе"
           />
           <span className="popup__input-error about-error"></span>
@@ -83,8 +83,8 @@ function App() {
           required
           className="popup__input popup__input_type_title"
           id="title"
-          minlength="2"
-          maxlength="30"
+          minLength="2"
+          maxLength="30"
           placeholder="Название"
         />
         <span className="popup__input-error title-error"></span>
