@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
@@ -7,10 +7,10 @@ import ImagePopup from "./ImagePopup";
 
 function App() {
 
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
-  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState(null);
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
@@ -53,6 +53,7 @@ function App() {
         isOpen = {isEditProfilePopupOpen}
         onClose={closeAllPopups}
         title = 'Редактировать профиль'
+        buttonText='Сохранить'
         >
           <input
             type="text"
@@ -76,7 +77,6 @@ function App() {
             placeholder="О себе"
           />
           <span className="popup__input-error about-error"></span>
-          <button className="popup__save-btn" type="submit">Сохранить</button>
       </PopupWithForm>
 
       <PopupWithForm
@@ -84,6 +84,7 @@ function App() {
         isOpen = {isAddPlacePopupOpen}
         onClose = {closeAllPopups}
         title = 'Новое место'
+        buttonText='Сохранить'
         >
          <input
           type="text"
@@ -105,7 +106,6 @@ function App() {
           placeholder="Ссылка на картинку"
         />
         <span className="popup__input-error link-error"></span>
-        <button className="popup__save-btn" type="submit">Сохранить</button>
       </PopupWithForm>
 
       <PopupWithForm
@@ -113,6 +113,7 @@ function App() {
         isOpen = {isEditAvatarPopupOpen}
         onClose = {closeAllPopups}
         title = 'Обновить аватар'
+        buttonText='Сохранить'
         >
          <input
           name="popup__avatar-link"
@@ -123,15 +124,14 @@ function App() {
           placeholder="https://somewebsite.com/someimage.jpg"
         />
         <span className="popup__input-error avatar-error"></span>
-        <button className="popup__save-btn" type="submit">Сохранить</button>
       </PopupWithForm>
 
       <PopupWithForm
         name = 'confirm'
         onClose = {closeAllPopups}
         title = 'Вы уверены?'
+        buttonText='Да'
       >
-        <button className="popup__save-btn" type="button">Да</button>
       </PopupWithForm>
 
       <ImagePopup 

@@ -1,9 +1,12 @@
 function Footer() {
-    return (
-        <footer className="footer">
-          <p className="footer__copyright">&copy; 2020 Mesto Russia</p>
-        </footer>
-    );
+  const date = new Date();
+  const currentYear = date.getFullYear();
+
+  return (
+      <footer className="footer">
+        <p className="footer__copyright">&copy; {currentYear} Mesto Russia</p>
+      </footer>
+  );
 }
 
 export default Footer;
