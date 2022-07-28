@@ -67,13 +67,12 @@ function Main(props) {
       </section>
       <section className="places" aria-label="Место">
         <ul className="places__list">
-          {cards.map((card) => {
+          {cards.map((item) => {
             return (
               <Card 
-                name = {card.name}
-                link = {card.link}
-                likes = {card.likes}
-                key = {card._id}
+                card = {item}
+                onCardClick = {props.onCardClick}
+                key = {item._id}
               />
             )
           })}

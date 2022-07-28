@@ -3,12 +3,14 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
+import ImagePopup from "./ImagePopup";
 
 function App() {
 
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState(null);
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
@@ -22,10 +24,15 @@ function App() {
     setAddPlacePopupOpen(true);
   }
 
+  function handleCardClick(card) {
+    setSelectedCard(card);
+  }
+
   function closeAllPopups() {
     setEditAvatarPopupOpen(false);
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
+    setSelectedCard(null);
   }
 
   return (
@@ -36,6 +43,7 @@ function App() {
           onEditProfile = {handleEditProfileClick}
           onAddPlace = {handleAddPlaceClick}
           onEditAvatar = {handleEditAvatarClick}
+          onCardClick = {handleCardClick}
         />
         <Footer />
       </div>
@@ -117,19 +125,19 @@ function App() {
         <span className="popup__input-error avatar-error"></span>
         <button className="popup__save-btn" type="submit">Сохранить</button>
       </PopupWithForm>
-    
 
-    <div className="popup popup_type_confirm">
-    <div className="popup__container">
-      <button
-        className="popup__close-btn"
-        type="button"
-        aria-label="Закрыть"
-      ></button>
-      <h2 className="popup__title">Вы уверены?</h2>
-      <button className="popup__save-btn" type="button">Да</button>
-    </div>
-    </div>
+      <PopupWithForm
+        name = 'confirm'
+        onClose = {closeAllPopups}
+        title = 'Вы уверены?'
+      >
+        <button className="popup__save-btn" type="button">Да</button>
+      </PopupWithForm>
+
+      <ImagePopup 
+        card = {selectedCard}
+        onClose = {closeAllPopups}
+      />
 
   </>
   );
