@@ -1,11 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../utils/api.js";
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
+import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
+import EditProfilePopup from "./EditProfilePopup";
 
 function App() {
+
+  const [currentUser, setCurrentUser] = useState('');
+
+  useEffect(() => {
+    api.getUserInfo()
+      .then((userData) => {
+        setCurrentUser(userData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
@@ -35,8 +50,19 @@ function App() {
     setSelectedCard(null);
   }
 
+  function handleUpdateUser(data) {
+    api.setUserInfo(data)
+      .then((userData) => {
+        setCurrentUser(userData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    closeAllPopups();
+  }
+
   return (
-    <>
+    <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
         <Main 
@@ -48,36 +74,11 @@ function App() {
         <Footer />
       </div>
 
-      <PopupWithForm
-        name = 'edit'
-        isOpen = {isEditProfilePopupOpen}
+      <EditProfilePopup 
+        isOpen={isEditProfilePopupOpen} 
         onClose={closeAllPopups}
-        title = 'Редактировать профиль'
-        buttonText='Сохранить'
-        >
-          <input
-            type="text"
-            name="popup__name"
-            required
-            className="popup__input popup__input_type_name"
-            id="name"
-            minLength="2"
-            maxLength="40"
-            placeholder="Имя"
-          />
-          <span className="popup__input-error name-error"></span>
-          <input
-            type="text"
-            name="popup__about-me"
-            required
-            className="popup__input popup__input_type_about-me"
-            id="about"
-            minLength="2"
-            maxLength="200"
-            placeholder="О себе"
-          />
-          <span className="popup__input-error about-error"></span>
-      </PopupWithForm>
+        onUpdateUser={handleUpdateUser} 
+      />
 
       <PopupWithForm
         name = 'add'
@@ -139,7 +140,7 @@ function App() {
         onClose = {closeAllPopups}
       />
 
-  </>
+  </CurrentUserContext.Provider>
   );
 }
 

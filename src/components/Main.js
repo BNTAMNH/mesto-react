@@ -1,25 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import api from "../utils/api.js"
 import Card from "../components/Card"
+import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
 function Main(props) {
 
-  const [userName, setUserName] = useState('');
-  const [userDescription, setUserDescription] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
+  const currentUser = useContext(CurrentUserContext); 
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
-    api.getUserInfo()
-      .then((userData) => {
-        setUserName(userData.name);
-        setUserDescription(userData.about);
-        setUserAvatar(userData.avatar);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
     api.getInitialCards()
       .then((initialCards) => {
         setCards(initialCards);
@@ -29,13 +18,24 @@ function Main(props) {
       });
   }, []);
 
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    api.changeLikeCardStatus(card._id, isLiked)
+      .then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+} 
+
   return (
     <main className="content">
       <section className="profile">
         <div className="profile__info">
           <div className="profile__avatar">
             <img
-              src={userAvatar}
+              src={currentUser.avatar}
               alt="Фото профиля"
               className="profile__photo"
             />
@@ -47,8 +47,8 @@ function Main(props) {
             ></button>
           </div>
           <div className="profile__data">
-            <h1 className="profile__name">{userName}</h1>
-            <p className="profile__about-me">{userDescription}</p>
+            <h1 className="profile__name">{currentUser.name}</h1>
+            <p className="profile__about-me">{currentUser.about}</p>
             <button
               onClick={props.onEditProfile}
               className="profile__edit-btn"
@@ -72,6 +72,7 @@ function Main(props) {
                 card = {item}
                 onCardClick = {props.onCardClick}
                 key = {item._id}
+                onCardLike = {handleCardLike}
               />
             )
           })}
