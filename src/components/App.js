@@ -8,10 +8,37 @@ import ImagePopup from "./ImagePopup";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup";
 
 function App() {
 
   const [currentUser, setCurrentUser] = useState('');
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    api.getInitialCards()
+      .then((initialCards) => {
+        setCards(initialCards);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    api.changeLikeCardStatus(card._id, isLiked)
+      .then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } 
 
   useEffect(() => {
     api.getUserInfo()
@@ -22,11 +49,6 @@ function App() {
         console.log(err);
       });
   }, []);
-
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
-  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
-  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState(null);
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
@@ -73,6 +95,17 @@ function App() {
     closeAllPopups();
   }
 
+  function handleAddPlaceSubmit(data) {
+    api.setNewCard(data)
+      .then((newCard) => {
+        setCards([newCard, ...cards]); 
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    closeAllPopups();
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -82,44 +115,23 @@ function App() {
           onAddPlace = {handleAddPlaceClick}
           onEditAvatar = {handleEditAvatarClick}
           onCardClick = {handleCardClick}
+          cards = {cards}
+          onCardLike = {handleCardLike}
         />
         <Footer />
       </div>
 
       <EditProfilePopup 
-        isOpen={isEditProfilePopupOpen} 
-        onClose={closeAllPopups}
-        onUpdateUser={handleUpdateUser} 
+        isOpen = {isEditProfilePopupOpen} 
+        onClose = {closeAllPopups}
+        onUpdateUser = {handleUpdateUser} 
       />
 
-      <PopupWithForm
-        name = 'add'
+      <AddPlacePopup
         isOpen = {isAddPlacePopupOpen}
         onClose = {closeAllPopups}
-        title = 'Новое место'
-        buttonText='Сохранить'
-        >
-         <input
-          type="text"
-          name="popup__title"
-          required
-          className="popup__input popup__input_type_title"
-          id="title"
-          minLength="2"
-          maxLength="30"
-          placeholder="Название"
-        />
-        <span className="popup__input-error title-error"></span>
-        <input
-          name="popup__photo-link"
-          required
-          className="popup__input popup__input_type_photo-link"
-          id="link"
-          type="url"
-          placeholder="Ссылка на картинку"
-        />
-        <span className="popup__input-error link-error"></span>
-      </PopupWithForm>
+        onAddPlace = {handleAddPlaceSubmit}
+      />
 
       <EditAvatarPopup
         isOpen = {isEditAvatarPopupOpen}
