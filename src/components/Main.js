@@ -1,41 +1,18 @@
-import { useState, useEffect } from "react";
-import api from "../utils/api.js"
+import { useContext } from "react";
 import Card from "../components/Card"
+import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
 function Main(props) {
 
-  const [userName, setUserName] = useState('');
-  const [userDescription, setUserDescription] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
-  const [cards, setCards] = useState([]);
-
-  useEffect(() => {
-    api.getUserInfo()
-      .then((userData) => {
-        setUserName(userData.name);
-        setUserDescription(userData.about);
-        setUserAvatar(userData.avatar);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    api.getInitialCards()
-      .then((initialCards) => {
-        setCards(initialCards);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
+  const currentUser = useContext(CurrentUserContext); 
+  
   return (
     <main className="content">
       <section className="profile">
         <div className="profile__info">
           <div className="profile__avatar">
             <img
-              src={userAvatar}
+              src={currentUser.avatar}
               alt="Фото профиля"
               className="profile__photo"
             />
@@ -47,8 +24,8 @@ function Main(props) {
             ></button>
           </div>
           <div className="profile__data">
-            <h1 className="profile__name">{userName}</h1>
-            <p className="profile__about-me">{userDescription}</p>
+            <h1 className="profile__name">{currentUser.name}</h1>
+            <p className="profile__about-me">{currentUser.about}</p>
             <button
               onClick={props.onEditProfile}
               className="profile__edit-btn"
@@ -66,12 +43,14 @@ function Main(props) {
       </section>
       <section className="places" aria-label="Место">
         <ul className="places__list">
-          {cards.map((item) => {
+          {props.cards.map((item) => {
             return (
               <Card 
                 card = {item}
                 onCardClick = {props.onCardClick}
                 key = {item._id}
+                onCardLike = {props.onCardLike}
+                onCardDelete = {props.onCardDelete}
               />
             )
           })}
